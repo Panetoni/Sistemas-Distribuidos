@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  vector_database:
+    build:
+      context: .
+      dockerfile: Dockerfile_database
+    ports:
+      - "5000:5000"  # Expõe a porta 5000 para comunicação externa
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker  
+    networks:
+      - app_network
+
+  operations:
+    build:
+      context: .
+      dockerfile: Dockerfile_operations
+    container_name: operations
+    volumes:
+      - ./operations/imagens:/app/imagens
+    depends_on:
+      - vector_database
+    networks:
+      - app_network
+
+networks:
+  app_network:

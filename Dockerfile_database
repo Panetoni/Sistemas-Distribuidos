@@ -1,0 +1,19 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Copia o arquivo requirements.txt da raiz do projeto para o container
+COPY requirements.txt /app/requirements.txt
+
+# Instala as dependências do requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia o código da aplicação para o container
+COPY vector_database/app.py /app/app.py
+
+# Atualiza o pip para a versão mais recente
+RUN pip install --upgrade pip
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
